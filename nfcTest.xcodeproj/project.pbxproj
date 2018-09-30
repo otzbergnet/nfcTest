@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2D654094215F4158001A6AF0 /* BarCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D654093215F4158001A6AF0 /* BarCodeViewController.swift */; };
 		2DE00F3C215A91810082F749 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DE00F3B215A91810082F749 /* AppDelegate.swift */; };
 		2DE00F3E215A91810082F749 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DE00F3D215A91810082F749 /* ViewController.swift */; };
 		2DE00F41215A91810082F749 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2DE00F3F215A91810082F749 /* Main.storyboard */; };
@@ -15,6 +16,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2D654093215F4158001A6AF0 /* BarCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarCodeViewController.swift; sourceTree = "<group>"; };
 		2DE00F38215A91810082F749 /* nfcTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = nfcTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2DE00F3B215A91810082F749 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2DE00F3D215A91810082F749 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -22,6 +24,7 @@
 		2DE00F42215A91820082F749 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2DE00F45215A91820082F749 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2DE00F47215A91820082F749 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2DE00F4D215A92A00082F749 /* nfcTest.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = nfcTest.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,8 +57,10 @@
 		2DE00F3A215A91810082F749 /* nfcTest */ = {
 			isa = PBXGroup;
 			children = (
+				2DE00F4D215A92A00082F749 /* nfcTest.entitlements */,
 				2DE00F3B215A91810082F749 /* AppDelegate.swift */,
 				2DE00F3D215A91810082F749 /* ViewController.swift */,
+				2D654093215F4158001A6AF0 /* BarCodeViewController.swift */,
 				2DE00F3F215A91810082F749 /* Main.storyboard */,
 				2DE00F42215A91820082F749 /* Assets.xcassets */,
 				2DE00F44215A91820082F749 /* LaunchScreen.storyboard */,
@@ -96,6 +101,11 @@
 				TargetAttributes = {
 					2DE00F37215A91810082F749 = {
 						CreatedOnToolsVersion = 10.0;
+						SystemCapabilities = {
+							com.apple.NearFieldCommunicationTagReading = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -135,6 +145,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2D654094215F4158001A6AF0 /* BarCodeViewController.swift in Sources */,
 				2DE00F3E215A91810082F749 /* ViewController.swift in Sources */,
 				2DE00F3C215A91810082F749 /* AppDelegate.swift in Sources */,
 			);
@@ -282,6 +293,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = nfcTest/nfcTest.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = J3PNNM2UXC;
 				INFOPLIST_FILE = nfcTest/Info.plist;
@@ -300,6 +312,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = nfcTest/nfcTest.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = J3PNNM2UXC;
 				INFOPLIST_FILE = nfcTest/Info.plist;

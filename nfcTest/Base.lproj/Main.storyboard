@@ -1,24 +1,204 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13122.16" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14313.18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="NUG-Na-252">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13104.12"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14283.14"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--NDEF ScanTest-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="nfcTest" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="D8Z-R7-GY2">
+                                <rect key="frame" x="16" y="538" width="343" height="50"/>
+                                <color key="backgroundColor" red="0.0" green="0.58980089430000004" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="AN1-re-zpF"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                                <state key="normal" title="Karte auslesen">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="scannPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Ul4-fB-jpH"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Drücken Sie &quot;Karte auslesen&quot;, um zu beginnen..." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5hB-Wy-1LK">
+                                <rect key="frame" x="20" y="129" width="335" height="275"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="275" id="WC4-py-Vvm"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="D8Z-R7-GY2" secondAttribute="trailing" constant="16" id="0pP-9Q-USH"/>
+                            <constraint firstItem="5hB-Wy-1LK" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="HaB-xK-yPF"/>
+                            <constraint firstItem="5hB-Wy-1LK" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="13" id="i0t-Y2-dhn"/>
+                            <constraint firstItem="D8Z-R7-GY2" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="pqI-3a-iOk"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="D8Z-R7-GY2" secondAttribute="bottom" constant="30" id="wyW-u8-nmI"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="5hB-Wy-1LK" secondAttribute="trailing" constant="20" id="xvg-xg-d9R"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
+                    <navigationItem key="navigationItem" title="NDEF ScanTest" id="puj-NZ-1bz"/>
+                    <connections>
+                        <outlet property="button" destination="D8Z-R7-GY2" id="psy-fw-I1e"/>
+                        <outlet property="messageLabel" destination="5hB-Wy-1LK" id="rPw-yI-HYj"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="2170" y="-559"/>
+        </scene>
+        <!--Code ScanTest-->
+        <scene sceneID="qMY-NO-AwR">
+            <objects>
+                <viewController id="Jfp-pN-nBE" customClass="BarCodeViewController" customModule="nfcTest" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="YOn-qN-3NQ">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TEm-zB-2xl">
+                                <rect key="frame" x="16" y="538" width="343" height="50"/>
+                                <color key="backgroundColor" red="0.0" green="0.58980089430000004" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="50" id="ImO-lb-rpA"/>
+                                    <constraint firstAttribute="height" relation="lessThanOrEqual" constant="50" id="MaK-jB-bnT"/>
+                                    <constraint firstAttribute="height" constant="50" id="d49-js-pcK"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                                <state key="normal" title="Nochmal Scannen">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="cameraAccessRequestTapped:" destination="Jfp-pN-nBE" eventType="touchUpInside" id="nyI-ke-djb"/>
+                                    <action selector="scanAgainTapped:" destination="Jfp-pN-nBE" eventType="touchUpInside" id="AW3-iX-1ob"/>
+                                    <action selector="scannPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="mAn-K6-35h"/>
+                                </connections>
+                            </button>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IyB-AK-oaX">
+                                <rect key="frame" x="16" y="538" width="343" height="50"/>
+                                <color key="backgroundColor" red="0.0" green="0.58980089430000004" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="X3I-is-FwP"/>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="50" id="mN4-Oo-0kO"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                                <state key="normal" title="Kamerazugriff erlauben">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="cameraAccessRequestTapped:" destination="Jfp-pN-nBE" eventType="touchUpInside" id="IdB-ao-wou"/>
+                                    <action selector="scannPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="7LQ-6C-3GE"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Um einen BarCode auslesen zu können, benötigen wir Zugriff zur Kamera" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eHM-g6-BOt">
+                                <rect key="frame" x="20" y="129" width="335" height="275"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="275" id="eFm-1P-Q5H"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="kON-nO-Gko" firstAttribute="trailing" secondItem="IyB-AK-oaX" secondAttribute="trailing" constant="16" id="23u-Sz-lJd"/>
+                            <constraint firstItem="kON-nO-Gko" firstAttribute="bottom" secondItem="TEm-zB-2xl" secondAttribute="bottom" constant="30" id="J0I-sb-bWT"/>
+                            <constraint firstItem="kON-nO-Gko" firstAttribute="bottom" secondItem="IyB-AK-oaX" secondAttribute="bottom" constant="30" id="Kic-BM-Cj6"/>
+                            <constraint firstItem="TEm-zB-2xl" firstAttribute="leading" secondItem="kON-nO-Gko" secondAttribute="leading" constant="16" id="MXB-gO-FRA"/>
+                            <constraint firstItem="kON-nO-Gko" firstAttribute="trailing" secondItem="TEm-zB-2xl" secondAttribute="trailing" constant="16" id="gXM-7r-5Yt"/>
+                            <constraint firstItem="kON-nO-Gko" firstAttribute="trailing" secondItem="eHM-g6-BOt" secondAttribute="trailing" constant="20" id="jYv-bl-qPr"/>
+                            <constraint firstItem="eHM-g6-BOt" firstAttribute="leading" secondItem="kON-nO-Gko" secondAttribute="leading" constant="20" id="nNw-wr-kE3"/>
+                            <constraint firstItem="IyB-AK-oaX" firstAttribute="leading" secondItem="kON-nO-Gko" secondAttribute="leading" constant="16" id="obX-Kb-V9v"/>
+                            <constraint firstItem="eHM-g6-BOt" firstAttribute="top" secondItem="kON-nO-Gko" secondAttribute="top" constant="13" id="vDB-Yl-q0a"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="kON-nO-Gko"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Code ScanTest" id="TR0-zv-sDN"/>
+                    <connections>
+                        <outlet property="messageLabel" destination="eHM-g6-BOt" id="fXo-QH-rQN"/>
+                        <outlet property="scanAgainButton" destination="TEm-zB-2xl" id="Mpa-22-agn"/>
+                        <outlet property="scanButton" destination="IyB-AK-oaX" id="Dtd-kO-7Dj"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="n9n-12-v8b" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1040.8" y="243.32833583208398"/>
+        </scene>
+        <!--NFC / RFID-->
+        <scene sceneID="Jcf-zB-Gzy">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="kD4-kg-1j4" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="NFC / RFID" image="rfid" id="nmW-Qd-Sy8"/>
+                    <toolbarItems/>
+                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="XLX-oP-nd9">
+                        <rect key="frame" x="0.0" y="20" width="375" height="96"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="Y6G-em-i95"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="1rg-uJ-4GA" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1360.8" y="-564.46776611694156"/>
+        </scene>
+        <!--Tab Bar Controller-->
+        <scene sceneID="5yc-vi-5HP">
+            <objects>
+                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="NUG-Na-252" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="a4x-L8-Zys">
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="kD4-kg-1j4" kind="relationship" relationship="viewControllers" id="Fx4-6k-NXg"/>
+                        <segue destination="pbB-LH-Z58" kind="relationship" relationship="viewControllers" id="ehL-hU-fl2"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="1Pe-01-MLP" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="421.60000000000002" y="-564.46776611694156"/>
+        </scene>
+        <!--Bar / QR Code-->
+        <scene sceneID="oVW-2U-VrS">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="pbB-LH-Z58" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Bar / QR Code" image="barcode" id="OnP-XW-zzu"/>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="S1o-1R-HmC">
+                        <rect key="frame" x="0.0" y="20" width="375" height="96"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="Jfp-pN-nBE" kind="relationship" relationship="rootViewController" id="3Zg-5o-RSw"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Idu-1k-EJe" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="101.59999999999999" y="243.32833583208398"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="barcode" width="37.5" height="37.5"/>
+        <image name="rfid" width="37.5" height="37.5"/>
+    </resources>
 </document>
