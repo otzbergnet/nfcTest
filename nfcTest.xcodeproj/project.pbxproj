@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		2D654094215F4158001A6AF0 /* BarCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D654093215F4158001A6AF0 /* BarCodeViewController.swift */; };
+		2D65409A2160E620001A6AF0 /* BookData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D6540992160E620001A6AF0 /* BookData.swift */; };
+		2D8D23702160F2F200E62F16 /* DetailedBookViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8D236F2160F2F200E62F16 /* DetailedBookViewController.swift */; };
 		2DE00F3C215A91810082F749 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DE00F3B215A91810082F749 /* AppDelegate.swift */; };
 		2DE00F3E215A91810082F749 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DE00F3D215A91810082F749 /* ViewController.swift */; };
 		2DE00F41215A91810082F749 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2DE00F3F215A91810082F749 /* Main.storyboard */; };
@@ -17,6 +19,8 @@
 
 /* Begin PBXFileReference section */
 		2D654093215F4158001A6AF0 /* BarCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarCodeViewController.swift; sourceTree = "<group>"; };
+		2D6540992160E620001A6AF0 /* BookData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookData.swift; sourceTree = "<group>"; };
+		2D8D236F2160F2F200E62F16 /* DetailedBookViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailedBookViewController.swift; sourceTree = "<group>"; };
 		2DE00F38215A91810082F749 /* nfcTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = nfcTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2DE00F3B215A91810082F749 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2DE00F3D215A91810082F749 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -61,10 +65,12 @@
 				2DE00F3B215A91810082F749 /* AppDelegate.swift */,
 				2DE00F3D215A91810082F749 /* ViewController.swift */,
 				2D654093215F4158001A6AF0 /* BarCodeViewController.swift */,
+				2D8D236F2160F2F200E62F16 /* DetailedBookViewController.swift */,
 				2DE00F3F215A91810082F749 /* Main.storyboard */,
 				2DE00F42215A91820082F749 /* Assets.xcassets */,
 				2DE00F44215A91820082F749 /* LaunchScreen.storyboard */,
 				2DE00F47215A91820082F749 /* Info.plist */,
+				2D6540992160E620001A6AF0 /* BookData.swift */,
 			);
 			path = nfcTest;
 			sourceTree = "<group>";
@@ -145,8 +151,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2D8D23702160F2F200E62F16 /* DetailedBookViewController.swift in Sources */,
 				2D654094215F4158001A6AF0 /* BarCodeViewController.swift in Sources */,
 				2DE00F3E215A91810082F749 /* ViewController.swift in Sources */,
+				2D65409A2160E620001A6AF0 /* BookData.swift in Sources */,
 				2DE00F3C215A91810082F749 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

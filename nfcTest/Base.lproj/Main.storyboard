@@ -104,7 +104,7 @@
                                     <action selector="scannPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="7LQ-6C-3GE"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Um einen BarCode auslesen zu können, benötigen wir Zugriff zur Kamera" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eHM-g6-BOt">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Um einen Barcode auslesen zu können, benötigen wir Zugriff zur Kamera" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eHM-g6-BOt">
                                 <rect key="frame" x="20" y="129" width="335" height="275"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="275" id="eFm-1P-Q5H"/>
@@ -113,13 +113,18 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="t8z-el-kOk">
+                                <rect key="frame" x="177.5" y="323.5" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="kON-nO-Gko" firstAttribute="trailing" secondItem="IyB-AK-oaX" secondAttribute="trailing" constant="16" id="23u-Sz-lJd"/>
+                            <constraint firstItem="t8z-el-kOk" firstAttribute="centerX" secondItem="YOn-qN-3NQ" secondAttribute="centerX" id="CIp-d9-9F4"/>
                             <constraint firstItem="kON-nO-Gko" firstAttribute="bottom" secondItem="TEm-zB-2xl" secondAttribute="bottom" constant="30" id="J0I-sb-bWT"/>
                             <constraint firstItem="kON-nO-Gko" firstAttribute="bottom" secondItem="IyB-AK-oaX" secondAttribute="bottom" constant="30" id="Kic-BM-Cj6"/>
                             <constraint firstItem="TEm-zB-2xl" firstAttribute="leading" secondItem="kON-nO-Gko" secondAttribute="leading" constant="16" id="MXB-gO-FRA"/>
+                            <constraint firstItem="t8z-el-kOk" firstAttribute="centerY" secondItem="YOn-qN-3NQ" secondAttribute="centerY" id="R2h-0C-XMf"/>
                             <constraint firstItem="kON-nO-Gko" firstAttribute="trailing" secondItem="TEm-zB-2xl" secondAttribute="trailing" constant="16" id="gXM-7r-5Yt"/>
                             <constraint firstItem="kON-nO-Gko" firstAttribute="trailing" secondItem="eHM-g6-BOt" secondAttribute="trailing" constant="20" id="jYv-bl-qPr"/>
                             <constraint firstItem="eHM-g6-BOt" firstAttribute="leading" secondItem="kON-nO-Gko" secondAttribute="leading" constant="20" id="nNw-wr-kE3"/>
@@ -128,16 +133,118 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="kON-nO-Gko"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Code ScanTest" id="TR0-zv-sDN"/>
+                    <navigationItem key="navigationItem" title="Code ScanTest" id="TR0-zv-sDN">
+                        <barButtonItem key="backBarButtonItem" title="Zurück" id="I7s-bI-qNf"/>
+                    </navigationItem>
                     <connections>
+                        <outlet property="activityIndicator" destination="t8z-el-kOk" id="qVf-sB-Wc4"/>
                         <outlet property="messageLabel" destination="eHM-g6-BOt" id="fXo-QH-rQN"/>
                         <outlet property="scanAgainButton" destination="TEm-zB-2xl" id="Mpa-22-agn"/>
                         <outlet property="scanButton" destination="IyB-AK-oaX" id="Dtd-kO-7Dj"/>
+                        <segue destination="BHs-Eh-zrN" kind="show" identifier="bookDetailSegue" id="ydL-gw-p7S"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="n9n-12-v8b" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1040.8" y="243.32833583208398"/>
+        </scene>
+        <!--Details-->
+        <scene sceneID="YSc-uB-OtV">
+            <objects>
+                <viewController title="Details" hidesBottomBarWhenPushed="YES" id="BHs-Eh-zrN" customClass="DetailedBookViewController" customModule="nfcTest" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Vaz-b0-gOI">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cover@3" translatesAutoresizingMaskIntoConstraints="NO" id="Dtq-oX-Y2L">
+                                <rect key="frame" x="16" y="172" width="108" height="160"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="160" id="JMm-nq-thS"/>
+                                    <constraint firstAttribute="width" constant="108" id="NTQ-kh-jg0"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Author" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="640-ah-HuI">
+                                <rect key="frame" x="132" y="172" width="227" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="2G6-5p-QP6">
+                                <rect key="frame" x="16" y="132" width="343" height="24"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Publisher" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FLM-mC-WNv">
+                                <rect key="frame" x="132" y="209" width="227" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pages" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vbl-Au-9yh">
+                                <rect key="frame" x="132" y="246" width="227" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Price" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tSo-dS-FRp">
+                                <rect key="frame" x="132" y="315" width="227" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Y2L-Wh-bea">
+                                <rect key="frame" x="16" y="587" width="343" height="50"/>
+                                <color key="backgroundColor" red="0.0" green="0.58980089430000004" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="NaK-6K-Ejd"/>
+                                </constraints>
+                                <state key="normal" title="Jetzt bei amazon.de zeigen">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="buyButtonTapped:" destination="BHs-Eh-zrN" eventType="touchUpInside" id="xNC-p1-k7m"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="Dtq-oX-Y2L" firstAttribute="leading" secondItem="HzC-mT-yh7" secondAttribute="leading" constant="16" id="3RW-Rt-R35"/>
+                            <constraint firstItem="640-ah-HuI" firstAttribute="leading" secondItem="Dtq-oX-Y2L" secondAttribute="trailing" constant="8" id="8gl-0D-dNB"/>
+                            <constraint firstItem="HzC-mT-yh7" firstAttribute="trailing" secondItem="Y2L-Wh-bea" secondAttribute="trailing" constant="16" id="Dxm-BE-Clb"/>
+                            <constraint firstItem="HzC-mT-yh7" firstAttribute="trailing" secondItem="Vbl-Au-9yh" secondAttribute="trailing" constant="16" id="Ejk-YJ-gs8"/>
+                            <constraint firstItem="Y2L-Wh-bea" firstAttribute="leading" secondItem="HzC-mT-yh7" secondAttribute="leading" constant="16" id="IcO-z7-DAt"/>
+                            <constraint firstItem="HzC-mT-yh7" firstAttribute="bottom" secondItem="Y2L-Wh-bea" secondAttribute="bottom" constant="30" id="LDJ-wK-oXV"/>
+                            <constraint firstItem="HzC-mT-yh7" firstAttribute="trailing" secondItem="tSo-dS-FRp" secondAttribute="trailing" constant="16" id="NGI-01-2fU"/>
+                            <constraint firstItem="Vbl-Au-9yh" firstAttribute="leading" secondItem="Dtq-oX-Y2L" secondAttribute="trailing" constant="8" id="SdL-6d-dyH"/>
+                            <constraint firstItem="2G6-5p-QP6" firstAttribute="top" secondItem="HzC-mT-yh7" secondAttribute="top" constant="16" id="cZr-J2-iww"/>
+                            <constraint firstItem="Vbl-Au-9yh" firstAttribute="top" secondItem="FLM-mC-WNv" secondAttribute="bottom" constant="16" id="ePZ-ps-4GL"/>
+                            <constraint firstItem="Dtq-oX-Y2L" firstAttribute="top" secondItem="2G6-5p-QP6" secondAttribute="bottom" constant="16" id="g6E-lI-UoX"/>
+                            <constraint firstItem="tSo-dS-FRp" firstAttribute="top" secondItem="Vbl-Au-9yh" secondAttribute="bottom" constant="48" id="gEv-Zh-chf"/>
+                            <constraint firstItem="FLM-mC-WNv" firstAttribute="leading" secondItem="Dtq-oX-Y2L" secondAttribute="trailing" constant="8" id="hIO-HF-3Ub"/>
+                            <constraint firstItem="tSo-dS-FRp" firstAttribute="leading" secondItem="Dtq-oX-Y2L" secondAttribute="trailing" constant="8" id="iFa-rM-qMm"/>
+                            <constraint firstItem="FLM-mC-WNv" firstAttribute="top" secondItem="640-ah-HuI" secondAttribute="bottom" constant="16" id="ivN-xb-OHa"/>
+                            <constraint firstItem="640-ah-HuI" firstAttribute="top" secondItem="2G6-5p-QP6" secondAttribute="bottom" constant="16" id="krK-kY-G0l"/>
+                            <constraint firstItem="HzC-mT-yh7" firstAttribute="trailing" secondItem="FLM-mC-WNv" secondAttribute="trailing" constant="16" id="l03-Nx-6hv"/>
+                            <constraint firstItem="HzC-mT-yh7" firstAttribute="trailing" secondItem="640-ah-HuI" secondAttribute="trailing" constant="16" id="qeh-He-5Ld"/>
+                            <constraint firstItem="2G6-5p-QP6" firstAttribute="leading" secondItem="HzC-mT-yh7" secondAttribute="leading" constant="16" id="wIg-Tm-n1p"/>
+                            <constraint firstItem="HzC-mT-yh7" firstAttribute="trailing" secondItem="2G6-5p-QP6" secondAttribute="trailing" constant="16" id="y0b-74-Rkt"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="HzC-mT-yh7"/>
+                    </view>
+                    <connections>
+                        <outlet property="bookAuthor" destination="640-ah-HuI" id="dro-J2-BQP"/>
+                        <outlet property="bookCover" destination="Dtq-oX-Y2L" id="YIt-Sr-jIv"/>
+                        <outlet property="bookPages" destination="Vbl-Au-9yh" id="Xnh-OU-sC3"/>
+                        <outlet property="bookPrice" destination="tSo-dS-FRp" id="xKs-GO-ovP"/>
+                        <outlet property="bookPublisher" destination="FLM-mC-WNv" id="eFD-RW-Anl"/>
+                        <outlet property="bookTitle" destination="2G6-5p-QP6" id="A0C-GG-q8y"/>
+                        <outlet property="buyButton" destination="Y2L-Wh-bea" id="Mml-UO-Sg8"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dSo-zV-R4B" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1792.8" y="241.52923538230885"/>
         </scene>
         <!--NFC / RFID-->
         <scene sceneID="Jcf-zB-Gzy">
@@ -165,6 +272,7 @@
                 <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="NUG-Na-252" sceneMemberID="viewController">
                     <toolbarItems/>
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="a4x-L8-Zys">
+                        <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </tabBar>
@@ -199,6 +307,7 @@
     </scenes>
     <resources>
         <image name="barcode" width="37.5" height="37.5"/>
+        <image name="cover@3" width="216" height="320"/>
         <image name="rfid" width="37.5" height="37.5"/>
     </resources>
 </document>

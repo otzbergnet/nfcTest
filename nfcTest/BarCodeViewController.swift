@@ -14,15 +14,19 @@ class BarCodeViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
     @IBOutlet weak var scanButton: UIButton!
     @IBOutlet weak var messageLabel: UILabel!
     @IBOutlet weak var scanAgainButton: UIButton!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     var captureSession: AVCaptureSession!
     var previewLayer: AVCaptureVideoPreviewLayer!
     var qrCodeFrameView = UIView()
     
+    var myBook : [BookData] = []
+        
     override func viewDidLoad() {
         super.viewDidLoad()
 
         scanButton.layer.cornerRadius = 10
+        scanAgainButton.layer.cornerRadius = 10
         messageLabel.layer.borderWidth = 2
         messageLabel.layer.cornerRadius = 10
         messageLabel.layer.borderColor = UIColor.lightGray.cgColor
@@ -166,20 +170,21 @@ class BarCodeViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
     func found(code: String, object: AVMetadataMachineReadableCodeObject) {
         messageLabel.text = code
         if object.type.rawValue == "org.gs1.EAN-13"{
-            print("found EAN")
+            //found EAN
             getISBNMetadata(isbn: code)
         }
     }
 
     func getISBNMetadata(isbn: String){
         if(isbn.count == 13 && validISBN13(isbn: isbn)){
-            print("valid ISBN")
+            // valid ISBN 13
+            askAmazon(query: isbn)
         }
         else if(!validISBN13(isbn: isbn)){
-            print("invalid ISBN")
+            // invalid ISBN 13
         }
         else{
-            print("other reason")
+            // likely not an ISBN to start with
         }
     }
     
@@ -200,6 +205,54 @@ class BarCodeViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         
         return false
         
+    }
+    
+    func askAmazon(query: String) {
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
+        activityIndicator.isHidden = false
+        activityIndicator.startAnimating()
+        let jsonUrlString = "https://www.otzberg.net/amazon/index.php?searchIndex=All&q=\(query)&format=json"
+        
+        guard let url = URL(string: jsonUrlString) else {
+            return
+        }
+        URLSession.shared.dataTask(with: url){ (data, response, err) in
+            
+            guard let data = data else {
+                return
+            }
+            
+            do{
+                let amazonData = try JSONDecoder().decode(BookAPI.self, from: data)
+                
+                DispatchQueue.main.async {
+                    if Int(amazonData.results) == 1{
+                        for book in amazonData.data{
+                            self.messageLabel.text = "\(book.author) \n \(book.title) \n ISBN: \(query) \n Amazon: \(book.price)"
+                            self.myBook.append(book)
+                            self.performSegue(withIdentifier: "bookDetailSegue", sender: self.myBook)
+                        }
+                    }
+                    
+                    UIApplication.shared.isNetworkActivityIndicatorVisible = false
+                    self.activityIndicator.stopAnimating()
+                    self.activityIndicator.isHidden = true
+                    //all done
+                }
+            }
+            catch let jsonError{
+                print(jsonError)
+                return
+            }
+            }.resume()
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue?, sender: Any?) {
+        if (segue?.identifier == "bookDetailSegue") {
+            let book = sender as! [BookData]
+            let detailBookView = segue?.destination as! DetailedBookViewController
+            detailBookView.book = book
+        }
     }
     
     
