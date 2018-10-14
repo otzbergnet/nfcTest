@@ -8,17 +8,20 @@
 
 import UIKit
 import AVFoundation
+import ContactsUI
 
-class BarCodeViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
+class BarCodeViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate, CNContactViewControllerDelegate {
 
     @IBOutlet weak var scanButton: UIButton!
     @IBOutlet weak var messageLabel: UILabel!
     @IBOutlet weak var scanAgainButton: UIButton!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var addContactButton: UIButton!
     
     var captureSession: AVCaptureSession!
     var previewLayer: AVCaptureVideoPreviewLayer!
     var qrCodeFrameView = UIView()
+    var contact = CNContact()
     
     var myBook : [BookData] = []
         
@@ -27,12 +30,14 @@ class BarCodeViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
 
         scanButton.layer.cornerRadius = 10
         scanAgainButton.layer.cornerRadius = 10
+        addContactButton.layer.cornerRadius = 10
         messageLabel.layer.borderWidth = 2
         messageLabel.layer.cornerRadius = 10
         messageLabel.layer.borderColor = UIColor.lightGray.cgColor
         
         scanButton.isHidden = true
         scanAgainButton.isHidden = true
+        addContactButton.isHidden = true
         
         // Do any additional setup after loading the view.
         
@@ -173,6 +178,9 @@ class BarCodeViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
             //found EAN
             getISBNMetadata(isbn: code)
         }
+        else if object.type.rawValue == "org.iso.QRCode" && code.contains("VCARD"){
+            handleVCard(vcard: code)
+        }
     }
 
     func getISBNMetadata(isbn: String){
@@ -247,12 +255,55 @@ class BarCodeViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
             }.resume()
     }
     
+    func handleVCard(vcard: String){
+        if let data = vcard.data(using: .utf8) {
+            do{
+                let contacts = try CNContactVCardSerialization.contacts(with: data)
+                if let myContact = contacts.first {
+                    self.contact = myContact
+                    self.addContactButton.isHidden = false
+                    self.activityIndicator.stopAnimating()
+                    self.activityIndicator.isHidden = true
+                    messageLabel.text = "VCARD für \(self.contact.givenName) \(self.contact.familyName) gefunden"
+                    addContactButton.setTitle("Kontakt hinzufügen", for: .normal)
+                }
+                
+            }
+            catch{
+                // Error Handling
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
     override func prepare(for segue: UIStoryboardSegue?, sender: Any?) {
         if (segue?.identifier == "bookDetailSegue") {
             let book = sender as! [BookData]
             let detailBookView = segue?.destination as! DetailedBookViewController
             detailBookView.book = book
         }
+    }
+  
+    @IBAction func addContactTapped(_ sender: Any) {
+        addContactForm(contact: self.contact)
+    }
+    
+    
+    func addContactForm(contact: CNContact) {
+        self.navigationController?.isNavigationBarHidden = false
+        let vc = CNContactViewController(forNewContact: contact)
+        vc.delegate = self as CNContactViewControllerDelegate
+        _ = self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func contactViewController(_ viewController: CNContactViewController, didCompleteWith contact: CNContact?) {
+        if contact == nil{
+            _ = self.navigationController?.popViewController(animated: true)
+        }
+    }
+    
+    func contactViewController(_ viewController: CNContactViewController, shouldPerformDefaultActionFor property: CNContactProperty) -> Bool {
+        return true
     }
     
     
