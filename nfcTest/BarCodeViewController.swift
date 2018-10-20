@@ -624,7 +624,7 @@ class BarCodeViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
                 self.present(navCon, animated: true, completion: nil)
             }
             else{
-                print("\(error?.localizedDescription)")
+                print("\(String(describing: error?.localizedDescription))")
                 self.messageLabel.text = "Ohne Zugriff auf den Kalender geht es leider nicht"
             }
         })
