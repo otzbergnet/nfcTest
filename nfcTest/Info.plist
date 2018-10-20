@@ -10,6 +10,8 @@
 	<string>Bitte erlaube den Zugriff auf Deine Kontakte, damit wir neue Kontakte hinzufügen können!</string>
 	<key>NFCReaderUsageDescription</key>
 	<string>Bitte erlaube Zugriff auf NFC, damit wir RFID/NFC Karten für Dich auslesen können</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>Bitte erlaube Zugriff auf den Kalender, damit Kalendereinträge hinzufügt weren können</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>

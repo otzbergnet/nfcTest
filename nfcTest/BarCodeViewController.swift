@@ -11,8 +11,9 @@ import AVFoundation
 import Contacts
 import ContactsUI
 import MessageUI
+import EventKitUI
 
-class BarCodeViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate, CNContactViewControllerDelegate, MFMessageComposeViewControllerDelegate {
+class BarCodeViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate, CNContactViewControllerDelegate, MFMessageComposeViewControllerDelegate, EKEventViewDelegate, UINavigationControllerDelegate {
 
     @IBOutlet weak var scanButton: UIButton!
     @IBOutlet weak var messageLabel: UILabel!
@@ -21,12 +22,15 @@ class BarCodeViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
     @IBOutlet weak var addContactButton: UIButton!
     @IBOutlet weak var callButton: UIButton!
     
+    var eventStore : EKEventStore!
+    var myEvent = MyEvent()
     var captureSession: AVCaptureSession!
     var previewLayer: AVCaptureVideoPreviewLayer!
     var qrCodeFrameView = UIView()
     var contact = CNContact()
     var newContact = CNMutableContact()
-    var isCall = Bool()
+    var isCall = false
+    var isEvent = false
     var number = String()
     var message = String()
     
@@ -209,6 +213,9 @@ class BarCodeViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
             }
             else if object.type.rawValue == "org.iso.QRCode" && code.contains("smsto:"){
                 self.handleSMS(code: code)
+            }
+            else if object.type.rawValue == "org.iso.QRCode" && code.contains("BEGIN:VEVENT"){
+                self.handleVEvent(code: code)
             }
         }
         
@@ -529,6 +536,100 @@ class BarCodeViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         }
     }
     
+    func handleVEvent(code: String){
+        self.isEvent = true
+       
+        let data = code.replacingOccurrences(of: "BEGIN:VEVENT\n", with: "")
+        let components = data.split(separator: "\n", omittingEmptySubsequences: false)
+        
+        for c in components {
+            if c.contains("SUMMARY:"){
+                // title of event
+                myEvent.title = c.replacingOccurrences(of: "SUMMARY:", with: "")
+            }
+            else if c.contains("DESCRIPTION:"){
+                // detailed description
+                myEvent.notes = c.replacingOccurrences(of: "DESCRIPTION:", with: "")
+            }
+            else if c.contains("LOCATION:"){
+                // location (string)
+                myEvent.location = c.replacingOccurrences(of: "LOCATION:", with: "")
+            }
+            else if c.contains("DTSTART:"){
+                // Start Date & Time as YYYYMMDDTHHMMSSZ
+                let dateString = c.replacingOccurrences(of: "DTSTART:", with: "")
+                myEvent.startDate = createDate(dateString: dateString)
+            }
+            else if c.contains("DTEND:"){
+                // End Date & Time as YYYYMMDDTHHMMSSZ
+                let dateString = c.replacingOccurrences(of: "DTEND:", with: "")
+                myEvent.endDate = createDate(dateString: dateString)
+            }
+            else if c.contains("GEO:"){
+                // LAT & LON - skipping for now
+            }
+        }
+        
+        callButton.isHidden = false
+        //messageLabel.text = "Möglicher Kalendereintrag gefunden\n\n\(self.calendar.itemTitle) am \(self.calendar.startDate)"
+        callButton.setTitle("Event hinzufügen", for: .normal)
+        
+    }
+    
+    func createDate(dateString: String) -> Date {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyyMMdd'T'HHmmss'Z'"
+        if let someDateTime = formatter.date(from: dateString){
+            return someDateTime
+        }
+        else {
+            let someDateTime = formatter.date(from: "20000101T000000Z")!
+            return someDateTime
+        }
+    }
+    
+    func eventViewController(_ controller: EKEventViewController, didCompleteWith action: EKEventViewAction) {
+        dismiss(animated: true, completion: nil)
+    }
+    
+    func eventEditViewController(_ controller: EKEventEditViewController, didCompleteWith action: EKEventEditViewAction) {
+        print("I am done")
+        controller.dismiss(animated: true, completion: nil)
+    }
+    
+    func eventEditViewControllerDefaultCalendar(forNewEvents controller: EKEventEditViewController) -> EKCalendar {
+
+        let calendar = self.eventStore.defaultCalendarForNewEvents
+        controller.title = "Event für \(calendar!.title)"
+        return calendar!
+
+    }
+    
+    func calendarAuthorizationGranted(){
+        let eventVC = EKEventViewController.init()
+        eventStore = EKEventStore.init()
+        let myNewEvent = EKEvent(eventStore: eventStore)
+        myNewEvent.title = myEvent.title
+        myNewEvent.notes = myEvent.notes
+        myNewEvent.startDate = myEvent.startDate
+        myNewEvent.endDate = myEvent.endDate
+        myNewEvent.location = myEvent.location
+        eventVC.event = myNewEvent
+        eventVC.delegate = self
+
+        eventStore.requestAccess(to: .event, completion: {
+            (granted, error) in
+            if granted {
+                let navCon = UINavigationController(rootViewController: eventVC)
+                self.present(navCon, animated: true, completion: nil)
+            }
+            else{
+                print("\(error?.localizedDescription)")
+                self.messageLabel.text = "Ohne Zugriff auf den Kalender geht es leider nicht"
+            }
+        })
+    }
+    
     @IBAction func cameraAccessRequestTapped(_ sender: Any) {
         checkCameraAuthorization()
     }
@@ -539,7 +640,11 @@ class BarCodeViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
     
     @IBAction func callButtonTapped(_ sender: Any) {
     
-        if(isCall){
+        if isEvent{
+            calendarAuthorizationGranted()
+            self.isEvent = false
+        }
+        else if isCall{
             if let url = URL(string: "tel://\(self.number)"), UIApplication.shared.canOpenURL(url) {
                 if #available(iOS 10, *) {
                     UIApplication.shared.open(url)
@@ -547,6 +652,7 @@ class BarCodeViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
                     UIApplication.shared.openURL(url)
                 }
             }
+            self.isCall = false
         }
         else{
             displayMessageInterface(number: self.number, message: self.message)
@@ -554,5 +660,14 @@ class BarCodeViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
     
     }
     
+    
+}
+
+class MyEvent {
+    var title = String()
+    var notes = String()
+    var location = String()
+    var startDate = Date()
+    var endDate = Date()
     
 }
