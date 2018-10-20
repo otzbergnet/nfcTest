@@ -79,7 +79,7 @@
                                     <constraint firstAttribute="height" constant="50" id="d49-js-pcK"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="22"/>
-                                <state key="normal" title="Nochmal Scannen">
+                                <state key="normal" title="Nochmal scannen">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
                                 <connections>

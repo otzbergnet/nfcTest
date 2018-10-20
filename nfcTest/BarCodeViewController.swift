@@ -8,6 +8,7 @@
 
 import UIKit
 import AVFoundation
+import Contacts
 import ContactsUI
 
 class BarCodeViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate, CNContactViewControllerDelegate {
@@ -22,6 +23,7 @@ class BarCodeViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
     var previewLayer: AVCaptureVideoPreviewLayer!
     var qrCodeFrameView = UIView()
     var contact = CNContact()
+    var newContact = CNMutableContact()
     
     var myBook : [BookData] = []
         
@@ -174,12 +176,19 @@ class BarCodeViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
     
     func found(code: String, object: AVMetadataMachineReadableCodeObject) {
         messageLabel.text = code
+        activityIndicator.isHidden = true
         if object.type.rawValue == "org.gs1.EAN-13"{
             //found EAN
             getISBNMetadata(isbn: code)
         }
         else if object.type.rawValue == "org.iso.QRCode" && code.contains("VCARD"){
             handleVCard(vcard: code)
+        }
+        else if object.type.rawValue == "org.iso.QRCode" && code.contains("MECARD"){
+            handleMeCard(mecard: code)
+        }
+        else if object.type.rawValue == "org.iso.QRCode" && code.contains("WIFI"){
+            handleWiFi(wifi: code)
         }
     }
 
@@ -276,6 +285,122 @@ class BarCodeViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         }
     }
     
+    func handleMeCard(mecard: String){
+        let myMeCard = mecard.replacingOccurrences(of: "MECARD:", with: "")
+        let components = myMeCard.split(separator: ";", omittingEmptySubsequences: false)
+        var labelText = "MeCard for "
+        for c in components {
+            if c.contains("N:"){
+                let fullName = c.replacingOccurrences(of: "N:", with: "")
+                let nameComponents = fullName.split(separator: " ")
+                if nameComponents.count == 2 {
+                    self.newContact.givenName = "\(nameComponents[0])"
+                    self.newContact.familyName = "\(nameComponents[1])"
+                }
+                else if nameComponents.count == 3 {
+                    self.newContact.givenName = "\(nameComponents[0])"
+                    self.newContact.middleName = "\(nameComponents[1])"
+                    self.newContact.familyName = "\(nameComponents[2])"
+                }
+                else {
+                    self.newContact.givenName = "\(nameComponents)"
+                }
+                labelText += "\(fullName) found"
+            }
+            else if c.contains("TEL:"){
+                let contactPhone = CNLabeledValue(label: CNLabelHome, value: CNPhoneNumber(stringValue: c.replacingOccurrences(of: "TEL:", with: "")))
+                self.newContact.phoneNumbers = [contactPhone]
+            }
+            else if c.contains("EMAIL:"){
+                let eMailString = c.replacingOccurrences(of: "EMAIL:", with: "")
+                let contactEMail = CNLabeledValue(label: CNLabelHome, value: eMailString as NSString)
+                self.newContact.emailAddresses = [contactEMail]
+                
+            }
+            else if c.contains("BDAY:"){
+                let birthdayString = c.replacingOccurrences(of: "BDAY:", with: "")
+                if birthdayString.count == 8 {
+                    let birthdayComponents = getDateComponents(dateString : birthdayString)
+                    let userCalendar = Calendar.current
+                    let someDateTime = userCalendar.dateComponents([Calendar.Component.year, Calendar.Component.month, Calendar.Component.day], from: birthdayComponents)
+                    self.newContact.birthday = someDateTime
+                }
+            }
+            else if c.contains("ADR:"){
+                let address = c.replacingOccurrences(of: "ADR:", with: "")
+                let addressResults = getAddress(from: address)
+                if addressResults.count == 1 {
+                    //self.newContact.postalAddresses
+                    let contactAddress = CNMutablePostalAddress()
+                    var home = CNLabeledValue<CNPostalAddress>()
+                    for address in addressResults {
+                        for (key, value) in address{
+                            if key.rawValue == "ZIP"{
+                                contactAddress.postalCode = value
+                            }
+                            else if key.rawValue == "Street"{
+                                contactAddress.street = value
+                            }
+                            else if key.rawValue == "City"{
+                                contactAddress.city = value
+                            }
+                            else if key.rawValue == "Country"{
+                                contactAddress.country = value
+                            }
+                            else if key.rawValue == "State"{
+                                contactAddress.state = value
+                            }
+                            else{
+                                print("unknown")
+                            }
+                        home = CNLabeledValue<CNPostalAddress>(label:CNLabelHome, value:contactAddress)
+                        }
+                    }
+                    self.newContact.postalAddresses = [home]
+                }
+                else{
+                    
+                }
+            }
+            else if c.contains("URL:"){
+                let url = c.replacingOccurrences(of: "URL:", with: "")
+                let contactUrl = CNLabeledValue(label: CNLabelHome, value: url as NSString)
+                self.newContact.urlAddresses = [contactUrl]
+            }
+            else{
+                print("other: \(c)\n")
+            }
+        }
+        self.contact = self.newContact as CNContact
+        self.addContactButton.setTitle("Kontakt hinzufügen", for: .normal)
+        self.addContactButton.isHidden = false
+        messageLabel.text = labelText
+    }
+    
+    func handleWiFi(wifi: String){
+        let wiFiCode = wifi.replacingOccurrences(of: "WIFI:", with: "")
+        let components = wiFiCode.split(separator: ";", omittingEmptySubsequences: false)
+        var text = "Wir haben ein WLAN für Dich gefunden!\n\n";
+        for c in components{
+            if c.contains("S:"){
+                // that is our SSID
+                text += "SSID: \(c.replacingOccurrences(of: "S:", with: ""))\n"
+            }
+            else if c.contains("T:"){
+                //that is our encryption protocol
+                text += "Protokoll: \(c.replacingOccurrences(of: "T:", with: ""))\n"
+            }
+            else if c.contains("P:"){
+                //that is our password
+                text += "Passwort:\n\(c.replacingOccurrences(of: "P:", with: ""))\n\n"
+                UIPasteboard.general.string = c.replacingOccurrences(of: "P:", with: "")
+            }
+        }
+        text += "Das Passwort haben wir schon für Dich kopiert und in die Zwischenablage gelegt"
+        messageLabel.text = text
+    }
+    
+    
     override func prepare(for segue: UIStoryboardSegue?, sender: Any?) {
         if (segue?.identifier == "bookDetailSegue") {
             let book = sender as! [BookData]
@@ -304,6 +429,37 @@ class BarCodeViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
     
     func contactViewController(_ viewController: CNContactViewController, shouldPerformDefaultActionFor property: CNContactProperty) -> Bool {
         return true
+    }
+    
+    func getDateComponents(dateString : String) -> Date {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+        dateFormatter.dateFormat = "yyyyMMdd"
+        if let date = dateFormatter.date(from: dateString) {
+            return date
+        }
+        else {
+            let date = Date()
+            return date
+        }
+    }
+    
+    func getAddress(from dataString: String) -> [[NSTextCheckingKey: String]] {
+        let detector = try! NSDataDetector(types: NSTextCheckingResult.CheckingType.address.rawValue)
+        let matches = detector.matches(in: dataString, options: [], range: NSRange(location: 0, length: dataString.utf16.count))
+        
+        var resultsArray =  [[NSTextCheckingKey: String]]()
+        // put matches into array of Strings
+        for match in matches {
+            if match.resultType == .address,
+                let components = match.addressComponents {
+                resultsArray.append(components)
+            } else {
+                print("no components found")
+            }
+        }
+        return resultsArray
     }
     
     
