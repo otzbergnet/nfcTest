@@ -130,18 +130,35 @@
                                     <action selector="addContactTapped:" destination="Jfp-pN-nBE" eventType="touchUpInside" id="kKm-F5-qi1"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="59Y-JG-0fV">
+                                <rect key="frame" x="16" y="478" width="343" height="50"/>
+                                <color key="backgroundColor" red="0.0" green="0.58980089430000004" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="mJl-jF-O0J"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                                <state key="normal" title="call / sms">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </state>
+                                <connections>
+                                    <action selector="callButtonTapped:" destination="Jfp-pN-nBE" eventType="touchUpInside" id="YLf-uo-mBV"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="kON-nO-Gko" firstAttribute="trailing" secondItem="IyB-AK-oaX" secondAttribute="trailing" constant="16" id="23u-Sz-lJd"/>
                             <constraint firstItem="Eb1-IN-jdO" firstAttribute="leading" secondItem="kON-nO-Gko" secondAttribute="leading" constant="16" id="93g-OR-vPb"/>
+                            <constraint firstItem="59Y-JG-0fV" firstAttribute="leading" secondItem="kON-nO-Gko" secondAttribute="leading" constant="16" id="AxT-Rg-fSS"/>
                             <constraint firstItem="t8z-el-kOk" firstAttribute="centerX" secondItem="YOn-qN-3NQ" secondAttribute="centerX" id="CIp-d9-9F4"/>
                             <constraint firstItem="kON-nO-Gko" firstAttribute="trailing" secondItem="Eb1-IN-jdO" secondAttribute="trailing" constant="16" id="FfO-kK-sjf"/>
                             <constraint firstItem="kON-nO-Gko" firstAttribute="bottom" secondItem="TEm-zB-2xl" secondAttribute="bottom" constant="30" id="J0I-sb-bWT"/>
                             <constraint firstItem="kON-nO-Gko" firstAttribute="bottom" secondItem="IyB-AK-oaX" secondAttribute="bottom" constant="30" id="Kic-BM-Cj6"/>
                             <constraint firstItem="TEm-zB-2xl" firstAttribute="leading" secondItem="kON-nO-Gko" secondAttribute="leading" constant="16" id="MXB-gO-FRA"/>
                             <constraint firstItem="t8z-el-kOk" firstAttribute="centerY" secondItem="YOn-qN-3NQ" secondAttribute="centerY" id="R2h-0C-XMf"/>
+                            <constraint firstItem="IyB-AK-oaX" firstAttribute="top" secondItem="59Y-JG-0fV" secondAttribute="bottom" constant="10" id="dxS-xh-2RS"/>
                             <constraint firstItem="kON-nO-Gko" firstAttribute="trailing" secondItem="TEm-zB-2xl" secondAttribute="trailing" constant="16" id="gXM-7r-5Yt"/>
+                            <constraint firstItem="kON-nO-Gko" firstAttribute="trailing" secondItem="59Y-JG-0fV" secondAttribute="trailing" constant="16" id="gtR-bd-KJS"/>
                             <constraint firstItem="kON-nO-Gko" firstAttribute="trailing" secondItem="eHM-g6-BOt" secondAttribute="trailing" constant="20" id="jYv-bl-qPr"/>
                             <constraint firstItem="eHM-g6-BOt" firstAttribute="leading" secondItem="kON-nO-Gko" secondAttribute="leading" constant="20" id="nNw-wr-kE3"/>
                             <constraint firstItem="IyB-AK-oaX" firstAttribute="leading" secondItem="kON-nO-Gko" secondAttribute="leading" constant="16" id="obX-Kb-V9v"/>
@@ -156,6 +173,7 @@
                     <connections>
                         <outlet property="activityIndicator" destination="t8z-el-kOk" id="qVf-sB-Wc4"/>
                         <outlet property="addContactButton" destination="Eb1-IN-jdO" id="APi-3J-uKT"/>
+                        <outlet property="callButton" destination="59Y-JG-0fV" id="liX-Am-1vi"/>
                         <outlet property="messageLabel" destination="eHM-g6-BOt" id="fXo-QH-rQN"/>
                         <outlet property="scanAgainButton" destination="TEm-zB-2xl" id="Mpa-22-agn"/>
                         <outlet property="scanButton" destination="IyB-AK-oaX" id="Dtd-kO-7Dj"/>

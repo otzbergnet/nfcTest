@@ -10,20 +10,25 @@ import UIKit
 import AVFoundation
 import Contacts
 import ContactsUI
+import MessageUI
 
-class BarCodeViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate, CNContactViewControllerDelegate {
+class BarCodeViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate, CNContactViewControllerDelegate, MFMessageComposeViewControllerDelegate {
 
     @IBOutlet weak var scanButton: UIButton!
     @IBOutlet weak var messageLabel: UILabel!
     @IBOutlet weak var scanAgainButton: UIButton!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var addContactButton: UIButton!
+    @IBOutlet weak var callButton: UIButton!
     
     var captureSession: AVCaptureSession!
     var previewLayer: AVCaptureVideoPreviewLayer!
     var qrCodeFrameView = UIView()
     var contact = CNContact()
     var newContact = CNMutableContact()
+    var isCall = Bool()
+    var number = String()
+    var message = String()
     
     var myBook : [BookData] = []
         
@@ -33,6 +38,8 @@ class BarCodeViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         scanButton.layer.cornerRadius = 10
         scanAgainButton.layer.cornerRadius = 10
         addContactButton.layer.cornerRadius = 10
+        callButton.layer.cornerRadius = 10
+        
         messageLabel.layer.borderWidth = 2
         messageLabel.layer.cornerRadius = 10
         messageLabel.layer.borderColor = UIColor.lightGray.cgColor
@@ -40,6 +47,7 @@ class BarCodeViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         scanButton.isHidden = true
         scanAgainButton.isHidden = true
         addContactButton.isHidden = true
+        callButton.isHidden = true
         
         // Do any additional setup after loading the view.
         
@@ -54,6 +62,10 @@ class BarCodeViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         if (captureSession?.isRunning == false) {
             checkCameraAuthorization()
         }
+        scanButton.isHidden = true
+        scanAgainButton.isHidden = true
+        addContactButton.isHidden = true
+        callButton.isHidden = true
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -92,6 +104,10 @@ class BarCodeViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
     }
     
     func initializeCaptureSession(){
+        scanButton.isHidden = true
+        scanAgainButton.isHidden = true
+        addContactButton.isHidden = true
+        callButton.isHidden = true
         captureSession = AVCaptureSession()
         
         guard let videoCaptureDevice = AVCaptureDevice.default(for: .video) else { return }
@@ -163,33 +179,39 @@ class BarCodeViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
             self.found(code: stringValue, object: readableObject)
             
         }
-
+    }
+    
+    func found(code: String, object: AVMetadataMachineReadableCodeObject) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.75){
             self.qrCodeFrameView.frame = CGRect(x: 0, y: 0, width: 0, height: 0)
             self.qrCodeFrameView.removeFromSuperview()
             self.previewLayer.removeFromSuperlayer()
+            
             self.scanAgainButton.isHidden = false
+            self.messageLabel.text = code
+            self.activityIndicator.isHidden = true
+            
+            if object.type.rawValue == "org.gs1.EAN-13"{
+                //found EAN
+                self.getISBNMetadata(isbn: code)
+            }
+            else if object.type.rawValue == "org.iso.QRCode" && code.contains("VCARD"){
+                self.handleVCard(vcard: code)
+            }
+            else if object.type.rawValue == "org.iso.QRCode" && code.contains("MECARD"){
+                self.handleMeCard(mecard: code)
+            }
+            else if object.type.rawValue == "org.iso.QRCode" && code.contains("WIFI"){
+                self.handleWiFi(wifi: code)
+            }
+            else if object.type.rawValue == "org.iso.QRCode" && code.contains("tel:"){
+                self.handleCall(number: code)
+            }
+            else if object.type.rawValue == "org.iso.QRCode" && code.contains("smsto:"){
+                self.handleSMS(code: code)
+            }
         }
         
-        
-    }
-    
-    func found(code: String, object: AVMetadataMachineReadableCodeObject) {
-        messageLabel.text = code
-        activityIndicator.isHidden = true
-        if object.type.rawValue == "org.gs1.EAN-13"{
-            //found EAN
-            getISBNMetadata(isbn: code)
-        }
-        else if object.type.rawValue == "org.iso.QRCode" && code.contains("VCARD"){
-            handleVCard(vcard: code)
-        }
-        else if object.type.rawValue == "org.iso.QRCode" && code.contains("MECARD"){
-            handleMeCard(mecard: code)
-        }
-        else if object.type.rawValue == "org.iso.QRCode" && code.contains("WIFI"){
-            handleWiFi(wifi: code)
-        }
     }
 
     func getISBNMetadata(isbn: String){
@@ -462,6 +484,50 @@ class BarCodeViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         return resultsArray
     }
     
+    func handleCall(number: String){
+        self.number = number.replacingOccurrences(of: "tel:", with: "")
+        self.message = ""
+    
+        self.messageLabel.text = "\(self.number)"
+        
+        self.isCall = true
+        self.callButton.isHidden = false
+        self.callButton.setTitle("Nummer anrufen", for: .normal)
+    }
+    
+    func handleSMS(code: String){
+        let data = code.replacingOccurrences(of: "smsto:", with: "")
+        let components = data.split(separator: ":", omittingEmptySubsequences: false)
+        
+        self.number = "\(components[0])"
+        self.message = "\(components[1])"
+        
+        self.messageLabel.text = "SMS an \(self.number) mit folgender Nachricht \n\n \(self.message) \n\n schreiben"
+        
+        self.isCall = false
+        self.callButton.isHidden = false
+        self.callButton.setTitle("SMS senden", for: .normal)
+    }
+    
+    func messageComposeViewController(_ controller: MFMessageComposeViewController, didFinishWith result: MessageComposeResult) {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    func displayMessageInterface(number: String, message: String) {
+        let composeVC = MFMessageComposeViewController()
+        composeVC.messageComposeDelegate = self
+        
+        // Configure the fields of the interface.
+        composeVC.recipients = [number]
+        composeVC.body = message
+        
+        // Present the view controller modally.
+        if MFMessageComposeViewController.canSendText() {
+            self.present(composeVC, animated: true, completion: nil)
+        } else {
+            messageLabel.text = "Nachricht kann nicht geschickt werden"
+        }
+    }
     
     @IBAction func cameraAccessRequestTapped(_ sender: Any) {
         checkCameraAuthorization()
@@ -470,4 +536,23 @@ class BarCodeViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
     @IBAction func scanAgainTapped(_ sender: Any) {
         view.setNeedsDisplay()
     }
+    
+    @IBAction func callButtonTapped(_ sender: Any) {
+    
+        if(isCall){
+            if let url = URL(string: "tel://\(self.number)"), UIApplication.shared.canOpenURL(url) {
+                if #available(iOS 10, *) {
+                    UIApplication.shared.open(url)
+                } else {
+                    UIApplication.shared.openURL(url)
+                }
+            }
+        }
+        else{
+            displayMessageInterface(number: self.number, message: self.message)
+        }
+    
+    }
+    
+    
 }
