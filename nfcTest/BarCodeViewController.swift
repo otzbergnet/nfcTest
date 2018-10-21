@@ -12,6 +12,7 @@ import Contacts
 import ContactsUI
 import MessageUI
 import EventKitUI
+import SafariServices
 
 class BarCodeViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate, CNContactViewControllerDelegate, MFMessageComposeViewControllerDelegate, EKEventViewDelegate, UINavigationControllerDelegate {
 
@@ -216,6 +217,9 @@ class BarCodeViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
             }
             else if object.type.rawValue == "org.iso.QRCode" && code.contains("BEGIN:VEVENT"){
                 self.handleVEvent(code: code)
+            }
+            else if object.type.rawValue == "org.iso.QRCode" && code.contains("http"){
+                self.handleURL(code: code)
             }
         }
         
@@ -658,6 +662,18 @@ class BarCodeViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
             displayMessageInterface(number: self.number, message: self.message)
         }
     
+    }
+    
+    func handleURL(code: String){
+        if let endOfPrefix = code.firstIndex(of: ":"){
+            self.messageLabel.backgroundColor = UIColor.green
+            let myProtocol = code[...endOfPrefix]
+            if(myProtocol == "https:" || myProtocol == "http:"){
+                let url = URL(string: code.trimmingCharacters(in: .whitespacesAndNewlines))
+                let vc = SFSafariViewController(url: url!)
+                self.present(vc, animated: true, completion: nil)
+            }
+        }
     }
     
     

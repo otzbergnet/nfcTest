@@ -4,14 +4,6 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
-	<key>NSCameraUsageDescription</key>
-	<string>Bitte erlaube Zugriff auf die Kamera, damit wir Bar Codes &amp; QR Codes für Dich scannen können</string>
-	<key>NSContactsUsageDescription</key>
-	<string>Bitte erlaube den Zugriff auf Deine Kontakte, damit wir neue Kontakte hinzufügen können!</string>
-	<key>NFCReaderUsageDescription</key>
-	<string>Bitte erlaube Zugriff auf NFC, damit wir RFID/NFC Karten für Dich auslesen können</string>
-	<key>NSCalendarsUsageDescription</key>
-	<string>Bitte erlaube Zugriff auf den Kalender, damit Kalendereinträge hinzufügt weren können</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -28,6 +20,14 @@
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NFCReaderUsageDescription</key>
+	<string>Bitte erlaube Zugriff auf NFC, damit wir RFID/NFC Karten für Dich auslesen können</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>Bitte erlaube Zugriff auf den Kalender, damit Kalendereinträge hinzufügt weren können</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Bitte erlaube Zugriff auf die Kamera, damit wir Bar Codes &amp; QR Codes für Dich scannen können</string>
+	<key>NSContactsUsageDescription</key>
+	<string>Bitte erlaube den Zugriff auf Deine Kontakte, damit wir neue Kontakte hinzufügen können!</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
