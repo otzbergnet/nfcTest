@@ -575,7 +575,11 @@ class BarCodeViewController: UIViewController, AVCaptureMetadataOutputObjectsDel
         }
         
         callButton.isHidden = false
-        //messageLabel.text = "Möglicher Kalendereintrag gefunden\n\n\(self.calendar.itemTitle) am \(self.calendar.startDate)"
+        let prettyDate = DateFormatter()
+        prettyDate.dateFormat = "dd. MMM yyyy' um 'hh:mm 'Uhr'"
+        let myDateString = prettyDate.string(from: myEvent.startDate)
+        
+        messageLabel.text = "Möglicher Kalendereintrag gefunden\n\n\(myEvent.title)\n\n am \(myDateString)"
         callButton.setTitle("Event hinzufügen", for: .normal)
         
     }
